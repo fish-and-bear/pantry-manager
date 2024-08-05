@@ -11,6 +11,7 @@
   "dependencies": {
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
+    "@google-cloud/aiplatform": "^3.25.0",
     "@mui/icons-material": "^5.16.6",
     "@mui/material": "^5.16.6",
     "@mui/x-date-pickers": "^7.12.0",
@@ -20,6 +21,11 @@
     "openai": "^4.54.0",
     "react": "^18",
     "react-dom": "^18"
+  },
+  "nextConfig": {
+    "serverRuntimeConfig": {
+      "projectRoot": "."
+    }
   },
   "devDependencies": {
     "@types/node": "^20",

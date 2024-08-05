@@ -1,4 +1,3 @@
-'use client';
 import React, { useRef, useState } from 'react';
 import { Button, CircularProgress } from '@mui/material';
 import { storage } from '../lib/firebase';
@@ -12,25 +11,20 @@ const ImageCapture: React.FC<ImageCaptureProps> = ({ onImageUpload }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleCapture = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && storage) {
       setLoading(true);
       const storageRef = ref(storage, `pantry_items/${Date.now()}_${file.name}`);
-      uploadBytes(storageRef, file).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          onImageUpload(url);
-          setLoading(false);
-        }).catch((error) => {
-          console.error("Error getting download URL:", error);
-          setLoading(false);
-        });
-      }).catch((error) => {
+      try {
+        const snapshot = await uploadBytes(storageRef, file);
+        const downloadURL = await getDownloadURL(snapshot.ref);
+        onImageUpload(downloadURL);
+      } catch (error) {
         console.error("Error uploading file:", error);
+      } finally {
         setLoading(false);
-      });
-    } else if (!storage) {
-      console.error("Firebase storage is not initialized");
+      }
     }
   };
 
